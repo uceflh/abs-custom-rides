@@ -57,6 +57,9 @@ function whatsapp() {
 
 // ---------- pieces ----------
 function card(v, i = 0) {
+  return `<div class="lot-wrap">` + lotLink(v, i) + `</div>`;
+}
+function lotLink(v, i = 0) {
   return `<a class="lot tilt reveal" href="#/vehicule/${esc(v.id)}" data-cursor="view" style="--d:${Math.min(i, 5) * 90}ms">
     <div class="lot-stage">
       <span class="lot-no mono" aria-hidden="true">N° ${lotNo(v)}</span>
@@ -343,7 +346,7 @@ function home() {
         </div>
         <a class="btn btn-ghost magnetic" href="https://www.instagram.com/abs_custom_rides/" target="_blank" rel="noopener">@abs_custom_rides ${I.arrow}</a>
       </div>
-      <div class="ig-rail" role="list" aria-label="Dernières publications Instagram">${IG_FILES.map((f) => `<a class="ig-card" role="listitem" href="https://www.instagram.com/abs_custom_rides/" target="_blank" rel="noopener"><img src="../media/instagram/${f}" alt="Publication Instagram d'ABS Custom Rides" width="480" height="640"></a>`).join('')}</div>
+      <div class="ig-rail" role="list" aria-label="Dernières publications Instagram">${IG_FILES.map((f) => `<a class="ig-card" role="listitem" href="https://www.instagram.com/abs_custom_rides/" target="_blank" rel="noopener"><span class="ig-frame"><img src="../media/instagram/${f}" alt="Publication Instagram d'ABS Custom Rides" width="480" height="640"></span></a>`).join('')}</div>
     </section>
     <section class="sec sec-quote">
       <div class="wrap">
@@ -902,11 +905,12 @@ if (fine && !reduce) {
       const r = m.getBoundingClientRect();
       m.style.translate = `${((mx - r.left - r.width / 2) * 0.16).toFixed(1)}px ${((my - r.top - r.height / 2) * 0.24).toFixed(1)}px`;
     }
-    const tl = t && t.closest('.tilt');
+    const host = t && t.closest('.lot-wrap');
+    const tl = host ? host.querySelector('.tilt') : t && t.closest('.tilt');
     if (tilt && tilt !== tl) tilt.style.rotate = '';
     tilt = tl;
     if (tl) {
-      const r = tl.getBoundingClientRect();
+      const r = (host || tl).getBoundingClientRect();
       const px = (mx - r.left) / r.width - 0.5;
       tl.style.rotate = `${(px * -1.6).toFixed(2)}deg`;
     }
@@ -918,7 +922,7 @@ if (fine && !reduce) {
   })();
   document.addEventListener('mouseover', (e) => {
     const t = e.target;
-    ring.classList.toggle('view', !!t.closest('[data-cursor="view"]'));
+    ring.classList.toggle('view', !!(t.closest('[data-cursor="view"]') || t.closest('.lot-wrap')));
     ring.classList.toggle('hover', !!t.closest('a, button, label, select, [data-hover]'));
     const dark = !!t.closest('.ft, .mq, .sec-paper');
     ring.classList.toggle('on-dark', dark);

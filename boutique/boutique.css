@@ -227,9 +227,12 @@ body.lock { overflow: hidden; }
 
 /* lot cards: catalogue entries */
 .lot { position: relative; display: flex; flex-direction: column; text-decoration: none; color: var(--ink); background: var(--card); border: 1.5px solid var(--rule); border-radius: var(--radius); transform-origin: 50% 0; transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s, opacity .8s var(--ease), rotate .6s var(--ease); transition-delay: var(--d, 0s); -webkit-tap-highlight-color: transparent; }
-.reveal.settled, .lot.in:hover { transition-delay: 0s; }
+/* hover is read on .lot-wrap, which never moves: lifting the card itself under the pointer made it flicker at the edges */
+.lot-wrap { position: relative; display: flex; flex-direction: column; }
+.lot-wrap > .lot { flex: 1; }
+.reveal.settled, .lot-wrap:hover > .lot.in { transition-delay: 0s; }
 @media (hover: hover) {
-  .lot.in:hover { border-color: var(--ink); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+  .lot-wrap:hover > .lot.in { border-color: var(--ink); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
 }
 .lot.in:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
 .lot-stage { position: relative; padding: 46px 10px 4px; border-bottom: 1.5px solid var(--rule); overflow: hidden; border-radius: 3px 3px 0 0; }
@@ -244,7 +247,7 @@ body.lock { overflow: hidden; }
 .lot-sub { font-size: 14.5px; color: var(--ink-2); }
 .lot-price { display: flex; align-items: center; justify-content: space-between; margin-top: 14px !important; padding-top: 12px; border-top: 3px double var(--ink); font-family: var(--f-mono); font-weight: 700; font-size: 16px; }
 .lot-price .ic { color: var(--rust); transition: transform .3s var(--ease); }
-.lot:hover .lot-price .ic { transform: translateX(4px); }
+.lot-wrap:hover .lot-price .ic { transform: translateX(4px); }
 .lot-sold { border-style: dashed; border-color: var(--ink-2); background: transparent; }
 .lot-sold .va { opacity: .55; filter: grayscale(.85); }
 .lot-sold .lot-stage { padding-top: 44px; border-bottom-style: dashed; border-bottom-color: var(--ink-2); }
@@ -486,10 +489,11 @@ body.has-dock { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
 .ig-sec .h-lg { color: var(--cream); }
 .ig-sec .btn-ghost { color: var(--cream); border-color: var(--cream); }
 .ig-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 18px; margin-bottom: 28px; }
-.ig-rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 22%); gap: 14px; overflow-x: auto; padding: 0 max(16px, calc((100vw - 1200px) / 2)) 12px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
-.ig-card { display: block; aspect-ratio: 3 / 4; overflow: hidden; border: 2px solid var(--cream); background: var(--asphalt-2); scroll-snap-align: start; box-shadow: 5px 5px 0 var(--rust); transition: transform .3s var(--ease); }
+.ig-rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 22%); gap: 14px; overflow-x: auto; padding: 10px max(16px, calc((100vw - 1200px) / 2)) 12px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+.ig-card { display: block; scroll-snap-align: start; }
+.ig-frame { display: block; aspect-ratio: 3 / 4; overflow: hidden; border: 2px solid var(--cream); background: var(--asphalt-2); box-shadow: 5px 5px 0 var(--rust); transition: transform .3s var(--ease); }
 .ig-card img { width: 100%; height: 100%; object-fit: cover; display: block; filter: sepia(.18) saturate(.9) contrast(1.04); transition: filter .4s, transform .6s var(--ease); }
-@media (hover: hover) { .ig-card:hover { transform: translateY(-4px) rotate(-.6deg); } .ig-card:hover img { filter: none; transform: scale(1.03); } }
+@media (hover: hover) { .ig-card:hover .ig-frame { transform: translateY(-4px) rotate(-.6deg); } .ig-card:hover img { filter: none; transform: scale(1.03); } }
 @media (max-width: 640px) { .ig-rail { grid-auto-columns: 62%; } }
 
 /* hero photograph, framed like a vintage print */
